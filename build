@@ -1,0 +1,13 @@
+#!/bin/sh
+
+curl -sL http://cpanmin.us | perl - -L local --quiet --notest App::cpanminus local::lib
+eval $(perl -Ilocal/lib/perl5 -Mlocal::lib=local)
+
+curl -sLo cpanfile $CPANFILE
+cpanm -L local --notest --quiet --installdeps .
+
+cpanm -L local --notest --quiet Net::Amazon::S3
+curl -sLo s3put.pl https://raw.github.com/pnu/heroku-vendor-cpanfile/master/s3put.pl
+chmod +x s3put.pl
+./s3put.pl local
+
